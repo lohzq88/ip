@@ -1,12 +1,33 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Skye {
+    ArrayList<String> tasks = new ArrayList<>();
     /**
      * Prints a string of characters as given
      * @param line String to output
      */
     public static void printString(String line) {
         System.out.println(line);
+    }
+
+    /**
+     * Adds a task to the list of tasks
+     * @param task The given task
+     */
+    public void addTask(String task) {
+        printString("added: " + task);
+        tasks.add(task);
+    }
+
+    /**
+     * Prints the current list of tasks
+     */
+    public void listTask() {
+        printString("Here are the list of tasks:");
+        for (int i=0; i<tasks.size(); i++) {
+            printString(i+1 + ": " + tasks.get(i));
+        }
     }
 
     /**
@@ -18,6 +39,7 @@ public class Skye {
     }
 
     public static void main(String[] args) {
+        Skye inst = new Skye();
         Scanner scanner = new Scanner(System.in);
         String logo = " ____  _               \n"
                 + "/ ___|| | ___   _  ___ \n"
@@ -31,8 +53,10 @@ public class Skye {
             String line = scanner.nextLine();
             if (line.equals("bye")) {
                 exitProgram();
+            } else if (line.equals("list")) {
+                inst.listTask();
             } else {
-                printString(line);
+                inst.addTask(line);
             }
         }
     }
