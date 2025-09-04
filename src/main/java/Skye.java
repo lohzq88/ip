@@ -2,7 +2,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Skye {
-    ArrayList<String> tasks = new ArrayList<>();
+    ArrayList<Task> tasks = new ArrayList<>();
     /**
      * Prints a string of characters as given
      * @param line String to output
@@ -17,7 +17,7 @@ public class Skye {
      */
     public void addTask(String task) {
         printString("added: " + task);
-        tasks.add(task);
+        tasks.add(new Task(task));
     }
 
     /**
@@ -26,8 +26,28 @@ public class Skye {
     public void listTask() {
         printString("Here are the list of tasks:");
         for (int i=0; i<tasks.size(); i++) {
-            printString(i+1 + ": " + tasks.get(i));
+            printString(i+1 + ". " + String.valueOf(tasks.get(i)));
         }
+    }
+
+    /**
+     * Marks a task as complete
+     */
+    public void markTask(int number) {
+        Task task = tasks.get(number - 1);
+        task.setTaskComplete();
+        printString("Well done! The task below has been completed:");
+        printString(String.valueOf(task));
+    }
+
+    /**
+     * Marks a task as incomplete
+     */
+    public void unmarkTask(int number) {
+        printString("Ok, I have marked the task below as incomplete:");
+        Task task = tasks.get(number - 1);
+        task.setTaskIncomplete();
+        printString(String.valueOf(task));
     }
 
     /**
@@ -55,6 +75,21 @@ public class Skye {
                 exitProgram();
             } else if (line.equals("list")) {
                 inst.listTask();
+            } else if (line.startsWith("unmark")) {
+                try {
+                    int number = Integer.parseInt(line.split(" ", 2)[1]);
+                    inst.unmarkTask(number);
+                } catch (IndexOutOfBoundsException | NumberFormatException e) {
+                    System.out.println("Invalid task number!");
+                }
+            }
+            else if (line.startsWith("mark")) {
+                try {
+                    int number = Integer.parseInt(line.split(" ", 2)[1]);
+                    inst.markTask(number);
+                } catch (IndexOutOfBoundsException | NumberFormatException e) {
+                    System.out.println("Invalid task number!");
+                }
             } else {
                 inst.addTask(line);
             }
