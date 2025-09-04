@@ -15,9 +15,11 @@ public class Skye {
      * Adds a task to the list of tasks
      * @param task The given task
      */
-    public void addTask(String task) {
-        printString("added: " + task);
-        tasks.add(new Task(task));
+    public void addTask(Task task) {
+        tasks.add(task);
+        printString("Got it. I've added this task:");
+        printString("  " + task.toString());
+        printString("Now you have " + this.tasks.size() + " tasks in the list.");
     }
 
     /**
@@ -25,8 +27,8 @@ public class Skye {
      */
     public void listTask() {
         printString("Here are the list of tasks:");
-        for (int i=0; i<tasks.size(); i++) {
-            printString(i+1 + ". " + String.valueOf(tasks.get(i)));
+        for (int i = 0; i < this.tasks.size(); i++) {
+            printString((i + 1) + ". " + this.tasks.get(i));
         }
     }
 
@@ -34,7 +36,7 @@ public class Skye {
      * Marks a task as complete
      */
     public void markTask(int number) {
-        Task task = tasks.get(number - 1);
+        Task task = this.tasks.get(number - 1);
         task.setTaskComplete();
         printString("Well done! The task below has been completed:");
         printString(String.valueOf(task));
@@ -45,7 +47,7 @@ public class Skye {
      */
     public void unmarkTask(int number) {
         printString("Ok, I have marked the task below as incomplete:");
-        Task task = tasks.get(number - 1);
+        Task task = this.tasks.get(number - 1);
         task.setTaskIncomplete();
         printString(String.valueOf(task));
     }
@@ -90,8 +92,19 @@ public class Skye {
                 } catch (IndexOutOfBoundsException | NumberFormatException e) {
                     System.out.println("Invalid task number!");
                 }
-            } else {
-                inst.addTask(line);
+            } else if (line.startsWith("todo")) {
+                String description = line.split(" ", 2)[1];
+                inst.addTask(new ToDo(description));
+            } else if (line.startsWith("deadline")) {
+                String details = line.split(" ", 2)[1];
+                String[] content = details.split(" /by ");
+                inst.addTask(new Deadline(content[0], content[1]));
+            }
+            else if (line.startsWith("event")) {
+                String details = line.split(" ", 2)[1];
+                String description = details.split(" /from ")[0];
+                String[] time = details.split(" /from ")[1].split(" /to ");
+                inst.addTask(new Event(description, time[0], time[1]));
             }
         }
     }
