@@ -58,6 +58,14 @@ public class Skye {
         printString(String.valueOf(task));
     }
 
+    public void deleteTask(int number) {
+        Task task = this.tasks.get(number - 1);
+        this.tasks.remove(number - 1);
+        printString("Got it. I have deleted this task:");
+        printString(String.valueOf(task));
+        printString("Now you have " + this.tasks.size() + " tasks in the list.");
+    }
+
     /**
      * Exits the program
      */
@@ -97,6 +105,12 @@ public class Skye {
                     }
                     int number = Integer.parseInt(userInputContent[1]);
                     inst.markTask(number);
+                } else if (userInput.startsWith("delete")) {
+                    if (userInputContent.length < 2) {
+                        throw new IncompleteCommandException("delete");
+                    }
+                    int number = Integer.parseInt(userInputContent[1]);
+                    inst.deleteTask(number);
                 } else if (userInput.startsWith("todo")) {
                     if (userInputContent.length < 2) {
                         throw new MissingFieldException("todo", "description");
