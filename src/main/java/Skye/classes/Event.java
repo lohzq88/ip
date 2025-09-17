@@ -10,7 +10,17 @@ public class Event extends Task{
     }
 
     @Override
+    public String getTaskType() {
+        return "E";
+    }
+
+    @Override
     public String toString() {
-        return String.format("[E]%s (from: %s to: %s)" , super.toString(), this.start, this.end);
+        return String.format("[%s]%s (from: %s to: %s)" , getTaskType(), super.toString(), this.start, this.end);
+    }
+
+    @Override
+    public String getTaskData() {
+        return String.format("%s|%s|%s", super.getTaskData(), this.start, this.end);
     }
 }

@@ -20,8 +20,20 @@ public class Task {
         return (this.isComplete ? "X" : " ");
     }
 
+    public String getTaskType() {
+        return " ";
+    }
+
     @Override
     public String toString() {
         return String.format("[%s] %s", getStatusIcon(), this.taskName);
+    }
+
+    /**
+     * Gets the string for writing into data file
+     * @return String of the correct format for data file write
+     */
+    public String getTaskData() {
+        return String.format("%s|%s|%s", getTaskType(), (this.isComplete ? "Y" : "N"), this.taskName);
     }
 }

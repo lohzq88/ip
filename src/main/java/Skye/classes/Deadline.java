@@ -8,7 +8,17 @@ public class Deadline extends Task{
     }
 
     @Override
+    public String getTaskType() {
+        return "D";
+    }
+
+    @Override
     public String toString() {
-        return String.format("[D]%s (by: %s)" , super.toString(), this.dueDate);
+        return String.format("[%s]%s (by: %s)" , getTaskType(), super.toString(), this.dueDate);
+    }
+
+    @Override
+    public String getTaskData() {
+        return String.format("%s|%s", super.getTaskData(), this.dueDate);
     }
 }

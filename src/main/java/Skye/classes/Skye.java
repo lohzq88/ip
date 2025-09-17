@@ -4,10 +4,16 @@ import Skye.errors.MissingFieldException;
 import Skye.errors.SkyeException;
 import Skye.errors.UnknownCommandException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Skye {
+    public static final String DATA_FILE_PATH = "../data.txt";
     ArrayList<Task> tasks = new ArrayList<>();
     /**
      * Prints a string of characters as given
@@ -26,6 +32,7 @@ public class Skye {
         printString("Got it. I've added this task:");
         printString("  " + task.toString());
         printString("Now you have " + this.tasks.size() + " tasks in the list.");
+        saveFile();
     }
 
     /**
@@ -46,6 +53,7 @@ public class Skye {
         task.setTaskComplete();
         printString("Well done! The task below has been completed:");
         printString(String.valueOf(task));
+        saveFile();
     }
 
     /**
@@ -56,6 +64,7 @@ public class Skye {
         Task task = this.tasks.get(number - 1);
         task.setTaskIncomplete();
         printString(String.valueOf(task));
+        saveFile();
     }
 
     public void deleteTask(int number) {
@@ -64,6 +73,51 @@ public class Skye {
         printString("Got it. I have deleted this task:");
         printString(String.valueOf(task));
         printString("Now you have " + this.tasks.size() + " tasks in the list.");
+        saveFile();
+    }
+
+    private void readFile() {
+        File myFile = new File(DATA_FILE_PATH);
+        try (Scanner myReader = new Scanner(myFile)) {
+            while (myReader.hasNextLine()) {
+                String rawData = myReader.nextLine();
+                String[] data = rawData.split("\\|");
+                if (Objects.equals(data[0], "T")) {
+                    Task task = new ToDo(data[2]);
+                    if (Objects.equals(data[1], "Y")) {
+                        task.setTaskComplete();
+                    }
+                    addTask(task);
+                } else if (Objects.equals(data[0], "D")) {
+                    Deadline task = new Deadline(data[2], data[3]);
+                    if (Objects.equals(data[1], "Y")) {
+                        task.setTaskComplete();
+                    }
+                    addTask(task);
+                } else if (Objects.equals(data[0], "E")) {
+                    Event task = new Event(data[2], data[3], data[4]);
+                    if (Objects.equals(data[1], "Y")) {
+                        task.setTaskComplete();
+                    }
+                    addTask(task);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            printString("No previous data file found.");
+        } catch (IndexOutOfBoundsException e) {
+            printString("Data file seems to be corrupted! Not using data file.");
+            tasks.clear();
+        }
+    }
+
+    private void saveFile() {
+        try (FileWriter myWriter = new FileWriter(DATA_FILE_PATH)) {
+            for (Task task : this.tasks) {
+                myWriter.write(task.getTaskData()+"\n");
+            }
+        } catch (IOException e) {
+            printString("Unable to write to file");
+        }
     }
 
     /**
@@ -77,6 +131,7 @@ public class Skye {
     public static void main(String[] args) {
         Skye inst = new Skye();
         Scanner scanner = new Scanner(System.in);
+        inst.readFile();
         String logo = " ____  _               \n"
                 + "/ ___|| | ___   _  ___ \n"
                 + "\\___ \\| |/ / | | |/ _ \\\n"
