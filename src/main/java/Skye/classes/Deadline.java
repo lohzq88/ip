@@ -1,3 +1,4 @@
+package Skye.classes;
 public class Deadline extends Task{
     protected String dueDate;
 

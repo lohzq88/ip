@@ -1,3 +1,4 @@
+package Skye.classes;
 public class Task {
     protected String taskName;
     protected boolean isComplete;
