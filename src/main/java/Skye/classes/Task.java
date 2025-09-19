@@ -2,6 +2,7 @@ package Skye.classes;
 public class Task {
     protected String taskName;
     protected boolean isComplete;
+    protected static final String DATE_TIME_FORMAT = "MMM dd yyyy";
 
     public Task(String name) {
         this.taskName = name;

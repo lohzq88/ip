@@ -1,19 +1,20 @@
 package Skye.classes;
-import Skye.errors.IncompleteCommandException;
-import Skye.errors.MissingFieldException;
-import Skye.errors.SkyeException;
-import Skye.errors.UnknownCommandException;
+import Skye.errors.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class Skye {
-    public static final String DATA_FILE_PATH = "../data.txt";
+    private static final String DATA_FILE_PATH = "../data.txt";
     ArrayList<Task> tasks = new ArrayList<>();
     /**
      * Prints a string of characters as given
@@ -76,6 +77,9 @@ public class Skye {
         saveFile();
     }
 
+    /**
+     * Read the contents of saved file
+     */
     private void readFile() {
         File myFile = new File(DATA_FILE_PATH);
         try (Scanner myReader = new Scanner(myFile)) {
@@ -89,13 +93,16 @@ public class Skye {
                     }
                     addTask(task);
                 } else if (Objects.equals(data[0], "D")) {
-                    Deadline task = new Deadline(data[2], data[3]);
+                    LocalDate dateBy = LocalDate.parse(data[3]);
+                    Deadline task = new Deadline(data[2], dateBy);
                     if (Objects.equals(data[1], "Y")) {
                         task.setTaskComplete();
                     }
                     addTask(task);
                 } else if (Objects.equals(data[0], "E")) {
-                    Event task = new Event(data[2], data[3], data[4]);
+                    LocalDate dateFrom = LocalDate.parse(data[3]);
+                    LocalDate dateBy = LocalDate.parse(data[4]);;
+                    Event task = new Event(data[2], dateFrom, dateBy);
                     if (Objects.equals(data[1], "Y")) {
                         task.setTaskComplete();
                     }
@@ -104,12 +111,15 @@ public class Skye {
             }
         } catch (FileNotFoundException e) {
             printString("No previous data file found.");
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException | DateTimeParseException e) {
             printString("Data file seems to be corrupted! Not using data file.");
             tasks.clear();
         }
     }
 
+    /**
+     * Save the current task list into a file
+     */
     private void saveFile() {
         try (FileWriter myWriter = new FileWriter(DATA_FILE_PATH)) {
             for (Task task : this.tasks) {
@@ -179,7 +189,13 @@ public class Skye {
                     if (content.length == 1) {
                         throw new MissingFieldException("deadline", "by");
                     }
-                    inst.addTask(new Deadline(content[0], content[1]));
+                    LocalDate dateBy;
+                    try {
+                        dateBy = LocalDate.parse(content[1]);
+                    } catch (DateTimeParseException e) {
+                        throw new ErrorFieldException("deadline", "by");
+                    }
+                    inst.addTask(new Deadline(content[0], dateBy));
                 }
                 else if (userInput.startsWith("event")) {
                     if (userInputContent.length < 2) {
@@ -193,7 +209,18 @@ public class Skye {
                     if (time.length == 1) {
                         throw new MissingFieldException("event", "to");
                     }
-                    inst.addTask(new Event(eventDetails[0], time[0], time[1]));
+                    LocalDate dateFrom, dateBy;
+                    try {
+                        dateFrom = LocalDate.parse(time[0]);
+                    } catch (DateTimeParseException e) {
+                        throw new ErrorFieldException("event", "from");
+                    }
+                    try {
+                        dateBy = LocalDate.parse(time[0]);
+                    } catch (DateTimeParseException e) {
+                        throw new ErrorFieldException("event", "by");
+                    }
+                    inst.addTask(new Event(eventDetails[0], dateFrom, dateBy));
                 } else {
                     throw new UnknownCommandException();
                 }
