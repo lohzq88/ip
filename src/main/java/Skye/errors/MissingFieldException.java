@@ -8,6 +8,6 @@ public class MissingFieldException extends SkyeException{
      * @param fieldName Name of the field, eg. description
      */
     public MissingFieldException(String fieldType, String fieldName) {
-        super(String.format("This %s of a %s cannot be empty!", fieldName, fieldType));
+        super(String.format("The '%s' field of a %s cannot be empty!", fieldName, fieldType));
     }
 }
