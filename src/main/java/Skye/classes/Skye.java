@@ -76,6 +76,18 @@ public class Skye {
     }
 
     /**
+     * Finds the list of tasks that contain a given string, and prints them
+     * @param find A string to search for
+     */
+    public void findTask(String find) {
+        for (Task task : this.tasks) {
+            if (task.containName(find)) {
+                printString(task.toString());
+            }
+        }
+    }
+
+    /**
      * Read the contents of saved file
      */
     private void readFile() {

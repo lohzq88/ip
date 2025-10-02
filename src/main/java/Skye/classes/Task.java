@@ -37,4 +37,13 @@ public class Task {
     public String getTaskData() {
         return String.format("%s|%s|%s", getTaskType(), (this.isComplete ? "Y" : "N"), this.taskName);
     }
+
+    /**
+     * Check if the task name contains the given string
+     * @param name given string to check against
+     * @return boolean
+     */
+    public boolean containsName(String name){
+        return this.taskName.contains(name);
+    }
 }
