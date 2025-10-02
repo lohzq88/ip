@@ -10,8 +10,6 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 public class Skye {
     private static final String DATA_FILE_PATH = "../data.txt";
@@ -75,6 +73,18 @@ public class Skye {
         printString(String.valueOf(task));
         printString("Now you have " + this.tasks.size() + " tasks in the list.");
         saveFile();
+    }
+
+    /**
+     * Finds the list of tasks that contain a given string, and prints them
+     * @param find A string to search for
+     */
+    public void findTask(String find) {
+        for (Task task : this.tasks) {
+            if (task.containName(find)) {
+                printString(task.toString());
+            }
+        }
     }
 
     /**
