@@ -66,6 +66,10 @@ public class Skye {
         saveFile();
     }
 
+    /**
+     * Deletes a task
+     * @param number The number of the task to delete
+     */
     public void deleteTask(int number) {
         Task task = this.tasks.get(number - 1);
         this.tasks.remove(number - 1);
