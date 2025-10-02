@@ -43,7 +43,7 @@ public class Task {
      * @param name given string to check against
      * @return boolean
      */
-    public boolean containsName(String name){
+    public boolean containName(String name){
         return this.taskName.contains(name);
     }
 }
